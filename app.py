@@ -9,7 +9,7 @@ app.secret_key = "my precious"
 
 #login decorator required
 def login_required(f):
-    @wraps(g)
+    @wraps(f)
     def wrap(*args, **kwargs):
         if 'logged_in' in session:
             return f(*args, **kwargs)
