@@ -1,11 +1,14 @@
 from flask import Flask, render_template, redirect, \
      url_for, request,session,flash
 from functools import wraps
+import sqlite3
+
 
 #creating the application object
 app = Flask(__name__)
 
 app.secret_key = "my precious"
+app.database = "sample.db"
 
 #login decorator required
 def login_required(f):
@@ -14,7 +17,7 @@ def login_required(f):
         if 'logged_in' in session:
             return f(*args, **kwargs)
         else:
-            flash ('you need to login first.')
+            flash ('You need to login first.')
             return redirect(url_for('login'))
     return wrap
 
@@ -36,10 +39,20 @@ def login():
         if request.form['username'] != 'admin' or request.form['password'] != 'admin':
             error = 'Invalid credentials.Please try again.'
         else:
+            session['logged_in'] = True
+            flash('You were just logged in!')
             return redirect(url_for('home'))
-
     return render_template('login.html', error=error)
 
+@app.route('/logout')
+@login_required
+def login():
+    session.pop('logged_in', None)
+    flash('You were just logged out!')
+    return redirect(url_for('welcome'))
+
+def connect_db():
+    return sqlite3.connect(app.database)
 
 if __name__== '__main__':
     app.run(debug=True)
