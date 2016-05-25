@@ -3,5 +3,12 @@
 
 <br>
 <p>Click<a href="/logout">here</a>to go home.</p>
-
-{% endblock %}
+<br>
+<br>
+<h3>Posts:</h3> 
+{% for post in posts %}
+<strong>Title:</strong>{{ post.title }}
+<br>
+<strong>Post:</strong>{{ post.description }}
+<br>
+<br> {% endfor %} {% endblock %}

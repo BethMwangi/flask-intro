@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, request, session, flash
+from flask import Flask, render_template, redirect, url_for, request, session, flash, g
 
 from functools import wraps
 import sqlite3
@@ -28,15 +28,24 @@ def login_required(f):
 @app.route('/')
 @login_required
 def home():
-    return render_template('index.html')
-    g.db = connect.db()
-    cur = g.db.execute('select  * from posts')
+#    return render_template('index.html')
+    g.db = connect_db()
+    cur  = g.db.execute('select  * from posts')
+#    print cur
+#    print cur.fetchall()
+    post_dict = {}
+    posts =[]
+    for row in cur.fetchall():
+        post_dict["title"] = row[0]
+        post_dict["description"] = row[1]
+        posts.append(post_dict)
+        print posts
     posts = [dict(title = row[0], description = row[1]) for row in cur.fetchall()]
+#    print posts
     g.db.close()
-
-    return render_template('index.html', posts = posts) #render a template
-
-     return "Hello, world!"
+    return render_template('index.html', posts=posts) #render a template
+#
+#    return "Hello, world!"
 
 
 
@@ -54,7 +63,8 @@ def login():
             session['logged_in'] = True
             flash('You were just logged in!')
             return redirect(url_for('home'))
-    return render_template('login.html', error=error)
+    return render_template('login.html', error = error)
+
 
 @app.route('/logout')
 @login_required
