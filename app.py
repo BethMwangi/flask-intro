@@ -31,16 +31,11 @@ def home():
 #    return render_template('index.html')
     g.db = connect_db()
     cur  = g.db.execute('select  * from posts')
-#    print cur
-#    print cur.fetchall()
-    post_dict = {}
+
     posts =[]
     for row in cur.fetchall():
-        post_dict["title"] = row[0]
-        post_dict["description"] = row[1]
-        posts.append(post_dict)
-        print posts
-    posts = [dict(title = row[0], description = row[1]) for row in cur.fetchall()]
+        posts.append(dict(title=row[0], description=row[1] )
+#    posts = [dict(title = row[0], description = row[1]) for row in cur.fetchall()]
 #    print posts
     g.db.close()
     return render_template('index.html', posts=posts) #render a template
