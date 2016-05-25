@@ -32,15 +32,14 @@ def home():
     g.db = connect_db()
     cur  = g.db.execute('select  * from posts')
 
-    posts =[]
+    posts = []
     for row in cur.fetchall():
-        posts.append(dict(title=row[0], description=row[1] )
+        posts.append(dict(title=row[0], description=row[1]) )
 #    posts = [dict(title = row[0], description = row[1]) for row in cur.fetchall()]
-#    print posts
     g.db.close()
     return render_template('index.html', posts=posts) #render a template
 #
-#    return "Hello, world!"
+
 
 
 
